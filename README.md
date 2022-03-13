@@ -9,7 +9,7 @@ Please keep in mind that this project is still a work in progress, and not all f
 Ginger has only one mandatory parameter, the URL of the target Pentaho installation:
 
 ```console
-user@host:~$ python gynger.py http://localhost:8080/pentaho
+user@host:~$ python gynger-2.py http://localhost:8080/pentaho
 ```
 
 **Note: do not include a trailing slash (/)**
@@ -17,7 +17,7 @@ user@host:~$ python gynger.py http://localhost:8080/pentaho
 Doing that will start Ginger in Anonymous mode, with limited funcionality. If valid credentials are known, those should be provided:
 
 ```console
-user@host:~$ python gynger.py http://localhost:8080/pentaho -u admin -p password
+user@host:~$ python gynger-2.py http://localhost:8080/pentaho -u admin -p password
 ```
 
 When Ginger establishes a connection with Pentaho BA, it will prompt and wait for commands.
@@ -30,7 +30,7 @@ dbs | list all connected db credentials
 files | list all available files in repository
 usernames | list all valid usernames
 userroles | list all valid usernames and valid roles
-shell | upload a reverse shell
+shell | execute OS command on the vulnerable system
 version | show Pentaho Version
 
 # Warning!
