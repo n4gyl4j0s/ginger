@@ -8,6 +8,7 @@ import sys
 import time
 import traceback
 import zipfile
+import os
 
 from colorama import Fore
 from colorama import init
@@ -30,7 +31,8 @@ from modules.rce.shell_upload import shell_upload
 # Colorama
 init(autoreset=True)
 
-
+# for debugging http request with burp proxy
+os.environ['https_proxy'] = '127.0.0.1:8080'
 
 def print_logo():
 	print (f"""{Fore.YELLOW}   _____   _                               
@@ -92,9 +94,12 @@ def main():
 				config.is_anon = False
 		else:
 			#Login cookie set
-			config.username == 'Cookie'
-			login_cookie = args.cookie.split('=')
-			config.session.cookies.update({login_cookie[0]: login_cookie[1]})
+			#config.username == 'Cookie'
+			login_cookies = args.cookie.split(';')
+			for var in login_cookies:
+			    login_cookie = var.split('=')
+			    config.session.cookies.set(login_cookie[0], login_cookie[1])
+			#config.session.cookies.update({login_cookie[0]: login_cookie[1]})
 			
 		# Create a directory to store all the reports
 		config.dirname = './reports/' + config.pentaho_path.replace('://', '_').replace('.', '_').replace('/', '_').replace(':', '_') + '/' + config.username
